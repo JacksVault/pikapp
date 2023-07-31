@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const String API_KEY = '3ad313351a7449639612b18f3969f4b3';
+const String API_KEY = '3989e2bf5a734e4890f5842c177c109a';
 const String API_URL = 'https://api.spoonacular.com/recipes/findByIngredients';
 const String IMAGE_URL = 'https://spoonacular.com/recipeImages/';
 
@@ -11,7 +11,7 @@ void main() {
 }
 
 class RecipeApp extends StatefulWidget {
-  const RecipeApp({super.key});
+  const RecipeApp({Key? key}) : super(key: key);
 
   @override
   _RecipeAppState createState() => _RecipeAppState();
@@ -56,6 +56,11 @@ class _RecipeAppState extends State<RecipeApp> {
         this.error = 'Error fetching data from the server.';
       });
     }
+  }
+
+  List<String> extractSteps(String? instructions) {
+    if (instructions == null) return [];
+    return instructions.split('\n').where((step) => step.isNotEmpty).toList();
   }
 
   @override
@@ -112,12 +117,20 @@ class _RecipeAppState extends State<RecipeApp> {
                           fit: BoxFit.cover,
                         ),
                       const SizedBox(height: 10),
-                      Text(
-                        recipe!['instructions'] ??
-                            'Instructions not available.',
-                        style: const TextStyle(fontSize: 16),
-                        textAlign: TextAlign.justify,
-                      ),
+                      if (recipe!['instructions'] != null)
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              extractSteps(recipe!['instructions']).length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: Text('${index + 1}.'),
+                              title: Text(
+                                  extractSteps(recipe!['instructions'])[index]),
+                            );
+                          },
+                        ),
                     ],
                   ),
                 if (error.isNotEmpty)
