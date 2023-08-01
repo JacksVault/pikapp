@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const String API_KEY = '3989e2bf5a734e4890f5842c177c109a';
+const String API_KEY = 'your API_KEY';
 const String API_URL = 'https://api.spoonacular.com/recipes/findByIngredients';
 const String IMAGE_URL = 'https://spoonacular.com/recipeImages/';
 
